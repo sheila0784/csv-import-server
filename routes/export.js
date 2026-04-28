@@ -4,8 +4,6 @@ import { Parser } from "json2csv";
 
 const router = express.Router();
 
-
-
 router.get("/:type", async (req, res) => {
   console.log("🔥 exportRoutes loaded");
   try {
@@ -32,6 +30,8 @@ router.get("/:type", async (req, res) => {
     const data = result.recordset;
 
     if (!data || data.length === 0) {
+      console.log("⚠️ No data found for type:", type);
+
       return res.status(404).json({ message: "No data found" });
     }
 
@@ -43,7 +43,6 @@ router.get("/:type", async (req, res) => {
     res.header("Content-Type", "text/csv");
     res.attachment(`${type}.csv`);
     res.send(csv);
-
   } catch (err) {
     console.error("Export error:", err);
     res.status(500).json({ message: "Server error" });
